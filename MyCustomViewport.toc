@@ -1,0 +1,5 @@
+## Interface: 120100
+## Title: MyCustomViewport
+## Notes: Automatically adjusts the WorldFrame render resolution.
+
+core.lua
