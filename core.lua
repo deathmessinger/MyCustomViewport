@@ -1,0 +1,7 @@
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+frame:SetScript("OnEvent", function()
+    WorldFrame:ClearAllPoints()
+    WorldFrame:SetPoint("TOPLEFT", 0, 0)
+    WorldFrame:SetPoint("BOTTOMRIGHT", 0, 100)
+end)
