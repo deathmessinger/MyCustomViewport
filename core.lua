@@ -1,53 +1,55 @@
--- 1. Create a parent frame behind everything to hold the UI panels
+local addonName, addonTable = ...
+
+if MyCustomViewportDB and not MyCustomViewportDB.isVersion26 then
+    MyCustomViewportDB = nil
+end
+
+MyCustomViewportDB = MyCustomViewportDB or {}
+
 local bgParent = CreateFrame("Frame", nil, UIParent)
 bgParent:SetFrameStrata("BACKGROUND")
-bgParent:SetFrameLevel(0)
+bgParent:SetFrameLevel(1) 
 
--- Function to generate the solid white background bars
-local function CreateWhiteBar(points)
-    local texture = bgParent:CreateTexture(nil, "BACKGROUND")
-    texture:SetColorTexture(0.13, 0.05, 0.05, 1) -- Pure White
-    for _, point in ipairs(points) do
-        texture:SetPoint(unpack(point))
+addonTable.topBar = nil; addonTable.bottomBar = nil
+addonTable.leftBar = nil; addonTable.rightBar = nil
+addonTable.topBorder = nil; addonTable.bottomBorder = nil
+addonTable.leftBorder = nil; addonTable.rightBorder = nil
+
+function addonTable.GetValue(key, fallback)
+    if MyCustomViewportDB[key] == nil then
+        MyCustomViewportDB[key] = fallback
     end
+    return MyCustomViewportDB[key]
+end
+
+local function CreateViewportBar()
+    local texture = bgParent:CreateTexture(nil, "BACKGROUND")
     return texture
 end
 
--- Build the top and bottom solid white panels
-local topBar = CreateWhiteBar({ {"TOPLEFT", UIParent, "TOPLEFT"}, {"BOTTOMRIGHT", UIParent, "TOPRIGHT", 0, -19} })
-local bottomBar = CreateWhiteBar({ {"BOTTOMLEFT", UIParent, "BOTTOMLEFT"}, {"TOPRIGHT", UIParent, "BOTTOMRIGHT", 0, 177} })
-
--- 2. Create the thin dark borders (Fixed to prevent anchor family errors)
-local function CreateThinBorder(yOffset)
-    local border = bgParent:CreateTexture(nil, "BACKGROUND")
-    border:SetColorTexture(0, 0., 1, 1) -- Dark Charcoal Gray color
-    border:SetHeight(5) -- Border thickness in pixels
-    
-    -- Using 'nil' as the relativeTo target anchors it strictly to the screen, 
-    -- bypassing the WorldFrame security lock completely.
-    border:SetPoint("LEFT", nil, "LEFT")
-    border:SetPoint("RIGHT", nil, "RIGHT")
-    
-    if yOffset < 0 then
-        border:SetPoint("TOP", nil, "TOP", 0, yOffset)
-    else
-        border:SetPoint("BOTTOM", nil, "BOTTOM", 0, yOffset)
-    end
-    
+local function CreateThinBorder(r, g, b, sublevel)
+    local border = bgParent:CreateTexture(nil, "OVERLAY", nil, sublevel)
+    border:SetColorTexture(r, g, b, 1)
     return border
 end
 
--- 3. Physically shrink and compress the 3D game engine resolution
-local renderFrame = CreateFrame("Frame")
-renderFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-renderFrame:SetScript("OnEvent", function()
-    WorldFrame:ClearAllPoints()
-    WorldFrame:SetPoint("TOPLEFT", 0, -15)      -- Top edge margin
-    WorldFrame:SetPoint("BOTTOMRIGHT", 0, 126)  -- Bottom edge margin
-    
-    -- Create the border lines and attach them perfectly to the WorldFrame edges
-    if not WorldFrame.topBorder then
-        WorldFrame.topBorder = CreateThinBorder(-20)
-        WorldFrame.bottomBorder = CreateThinBorder(177)
+local initFrame = CreateFrame("Frame")
+initFrame:RegisterEvent("ADDON_LOADED")
+initFrame:SetScript("OnEvent", function(self, event, arg1)
+    if arg1 == addonName then
+        MyCustomViewportDB = MyCustomViewportDB or {}
+        MyCustomViewportDB.isVersion26 = true 
+        
+        addonTable.leftBar = CreateViewportBar()
+        addonTable.rightBar = CreateViewportBar()
+        addonTable.topBar = CreateViewportBar()
+        addonTable.bottomBar = CreateViewportBar()
+        
+        addonTable.topBorder = CreateThinBorder(addonTable.GetValue("topBorderR", 0.08), addonTable.GetValue("topBorderG", 0.08), addonTable.GetValue("topBorderB", 0.08), 5)
+        addonTable.bottomBorder = CreateThinBorder(addonTable.GetValue("bottomBorderR", 0.08), addonTable.GetValue("bottomBorderG", 0.08), addonTable.GetValue("bottomBorderB", 0.08), 5)
+        addonTable.leftBorder = CreateThinBorder(addonTable.GetValue("leftBorderR", 0.08), addonTable.GetValue("leftBorderG", 0.08), addonTable.GetValue("leftBorderB", 0.08), 7)
+        addonTable.rightBorder = CreateThinBorder(addonTable.GetValue("rightBorderR", 0.08), addonTable.GetValue("rightBorderG", 0.08), addonTable.GetValue("rightBorderB", 0.08), 7)
+        
+        self:UnregisterEvent("ADDON_LOADED")
     end
 end)
