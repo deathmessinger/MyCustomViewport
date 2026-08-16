@@ -3,3 +3,6 @@
 ## Notes: Automatically adjusts the WorldFrame render resolution.
 
 core.lua
+templates.lua
+engine.lua
+options.lua
