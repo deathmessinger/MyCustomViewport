@@ -1,6 +1,8 @@
 ## Interface: 120100
+## Author: Deathmessinger
+## Version: 1.0
 ## Title: MyCustomViewport
-## Notes: Automatically adjusts the WorldFrame render resolution.
+## Notes: Resizes the WorldFrame to create custom margins.
 ## SavedVariables: MyCustomViewportDB
 
 core.lua
