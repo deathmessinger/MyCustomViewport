@@ -1,0 +1,22 @@
+name: Package and Release Addon
+
+on:
+  push:
+    tags:
+      - 'v*' # Triggers the workflow only when you push a version tag like v1.0.0
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Check out the repository code
+      - name: Clone Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for the packager to read git history correctly
+
+      # Step 2: Package the addon and upload it to GitHub Releases
+      - name: Pack and Publish Addon
+        uses: BigWigsMods/packager@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Automatically provided by GitHub
