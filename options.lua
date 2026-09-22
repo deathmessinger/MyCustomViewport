@@ -55,16 +55,16 @@ local function InitializeOptionsPanel()
     marginHeader:SetPoint("TOPLEFT", title, "BOTTOMLEFT", -180, -65) 
     marginHeader:SetText("          Screen Margins")
 
-    local topSlider = MyCustomViewportUI.CreateSlider(scrollChild, "Top Margin (px)", 0, 500, 1, "topMargin", 15, true)
+    local topSlider = MyCustomViewportUI.CreateSlider(scrollChild, "Top Margin (px)", -2, 500, 1, "topMargin", 15, true)
     topSlider:SetPoint("TOPLEFT", marginHeader, "BOTTOMLEFT", 0, -25)
 
-    local bottomSlider = MyCustomViewportUI.CreateSlider(scrollChild, "Bottom Margin (px)", 0, 500, 1, "bottomMargin", 50, true)
+    local bottomSlider = MyCustomViewportUI.CreateSlider(scrollChild, "Bottom Margin (px)", -2, 500, 1, "bottomMargin", 50, true)
     bottomSlider:SetPoint("TOPLEFT", topSlider, "BOTTOMLEFT", 0, -55)
 
-    local leftSlider = MyCustomViewportUI.CreateSlider(scrollChild, "Left Margin (px)", 0, 500, 1, "leftMargin", 0, true)
+    local leftSlider = MyCustomViewportUI.CreateSlider(scrollChild, "Left Margin (px)", -2, 500, 1, "leftMargin", 0, true)
     leftSlider:SetPoint("TOPLEFT", bottomSlider, "BOTTOMLEFT", 0, -55)
 
-    local rightSlider = MyCustomViewportUI.CreateSlider(scrollChild, "Right Margin (px)", 0, 500, 1, "rightMargin", 0, true)
+    local rightSlider = MyCustomViewportUI.CreateSlider(scrollChild, "Right Margin (px)", -2, 500, 1, "rightMargin", 0, true)
     rightSlider:SetPoint("TOPLEFT", leftSlider, "BOTTOMLEFT", 0, -55)
 
     local topBorderHeader = scrollChild:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
@@ -98,15 +98,13 @@ local function InitializeOptionsPanel()
     local rightShiftSlider = MyCustomViewportUI.CreateSlider(scrollChild, "Right Line Shift", -50, 50, 1, "rightBorderShift", 0, true)
     rightShiftSlider:SetPoint("TOPLEFT", rightThicknessSlider, "BOTTOMLEFT", 0, -55)
 
-    -- ================= UPDATED: CENTERED COLOR HEADER ALIGNMENT =================
+    -- ================= CENTERED COLOR HEADER ALIGNMENT =================
     local barColorHeader = scrollChild:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-    -- CHANGED: Anchored via "TOPLEFT" to scrollChild, but shifted X by 210 to perfectly sit in the center of the columns
     barColorHeader:SetPoint("TOPLEFT", scrollChild, "TOPLEFT", 210, -410)
     barColorHeader:SetText("Color Customizations")
 
     local function CreateLocalColorSwatch(labelName, xOff, yOffset, rKey, gKey, bKey, defR, defG, defB)
         local colorLabel = scrollChild:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-        -- FIXED: Offsetting the labels directly from a left-flush baseline (-194px from centered header) keeps the grid rigid
         colorLabel:SetPoint("TOPLEFT", barColorHeader, "BOTTOMLEFT", xOff - 194, yOffset)
         colorLabel:SetText(labelName)
 
